@@ -1,10 +1,10 @@
 import math
 import random
 import numpy as np
-MAX_CONNECTIONS = 3
+MAX_CONNECTIONS = 10
 TIRING_RATE = 0.1
-NUMBER_OF_NEURONS = 10
-SIMULATION_STEPS = 5000
+NUMBER_OF_NEURONS = 40
+SIMULATION_STEPS = 100
 
 class Neuron():
     def __init__(self):
@@ -13,6 +13,7 @@ class Neuron():
         self.inp = 0
         self.firing_probability = 0
         self.tiredness = 0
+        # Juster hvor mye av nettet jeg starter med å aktivere
         self.active = np.random.randint(0,2)
         self.first_run = True
 
@@ -63,7 +64,7 @@ if __name__=="__main__":
 
     for i in range(0,NUMBER_OF_NEURONS):
         neurons.append(Neuron())
-    # Denne er feil: maks inn, ikke maks ut
+
     for neuron in neurons:
         for i in range(0, np.random.randint(0,MAX_CONNECTIONS)):
             neuron.inputs.append(neurons[np.random.randint(0,NUMBER_OF_NEURONS)])
