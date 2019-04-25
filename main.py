@@ -2,48 +2,47 @@ import math
 import numpy as np
 import pandas as pd
 from tqdm import tqdm
-SEED = 100
+import random
 
 class Neuron():
     def __init__(self, max_connections, tiring_rate):
         self.outputs = [] 
         self.inputs = []
         self.inp = 0
-        self.firing_probability = 0
+        self.firing_probability = 0.8
         self.tiredness = 0
-        # Juster hvor mye av nettet jeg starter med å aktivere
-        self.active_old = 0
-        self.active = np.random.randint(0,2)
+        self.active_old = np.random.randint(0, 2)
+        self.active = 0
         self.first_run = True
         self.max_connections = max_connections
         self.tiring_rate = tiring_rate
 
     def update(self):
-        if self.first_run == True:
-            if self.active:
+        if self.first_run:
+            if self.active_old:
                 self.tiredness = np.clip(self.tiredness + self.tiring_rate, 0, 1)
                 self.first_run = False
             else:
-                self.active  = 0
+                self.active_old = 0
                 self.tiredness = np.clip(self.tiredness - self.tiring_rate, 0, 1)
                 self.first_run = False          
         else:
             self.threshold()
-            if self.active:
-                self.tiredness = np.clip(self.tiredness - self.tiring_rate, 0, 1)
+            if self.active_old:
+                self.tiredness = np.clip(self.tiredness + self.tiring_rate, 0, 1)
             else:
-                self.tiredness =  np.clip(self.tiredness + self.tiring_rate, 0, 1)
+                self.tiredness = np.clip(self.tiredness - self.tiring_rate, 0, 1)
         
     def threshold(self):
         for neuron in self.inputs:
-            if neuron.active:
+            if neuron.active_old:
                 self.inp = self.inp + 1
         if self.inp == 0:
             self.firing_probability = 0
         else:
             self.firing_probability = np.clip(0.5 + (self.inp/2*(self.max_connections+1)) - self.tiredness, 0, 1)
         self.inp = 0
-        if np.random.random() < self.firing_probability:
+        if random.random() < self.firing_probability:
             self.active_old = 1
         else:
             self.active_old = 0        
@@ -61,17 +60,16 @@ def active_neurons(neurons):
 
 def update_active_old(neurons):
     for neuron in neurons:
-        neuron.active = neuron.active_old    
+        neuron.active = neuron.active_old
 
-def simulation(max_connections, tiring_rate, number_of_neurons, simulation_steps, results, res_ind, seed):
+def simulation(max_connections, tiring_rate, number_of_neurons, simulation_steps, results, res_ind):
     neurons = []
-    np.random.seed(seed)
-    for i in range(0,number_of_neurons):
+    for i in range(0,number_of_neurons - 1):
         neurons.append(Neuron(max_connections, tiring_rate))
 
     for neuron in neurons:
-        for i in range(0, np.random.randint(0,max_connections)):
-            neuron.inputs.append(neurons[np.random.randint(0,number_of_neurons)])
+        for i in range(0, np.random.randint(1,max_connections)):
+            neuron.inputs.append(neurons[np.random.randint(0,number_of_neurons - 1)])
     
     activity = []
     for i in range(0, simulation_steps):
@@ -84,16 +82,15 @@ def simulation(max_connections, tiring_rate, number_of_neurons, simulation_steps
 if __name__=="__main__":
     simulation_steps = 20
     tiring_rates = tqdm([0.1, 0.2, 0.3, 0.4, 0.5])
-    number_of_neurons = 10
+    number_of_neurons = 100
     max_connections = 3
     results = pd.DataFrame(columns=['max_connections', 'tiring_rate', 'neurons', 'simulation_steps', 'active_per_step'])
     res_ind = 0
     '''for i in range(0,100):
         simulation(4,0.1,10,100,results,  i)'''
     for tiring_rate in tiring_rates:
-        for n_neurons in tqdm(range(3,number_of_neurons)):
-            for max_connections in range(1,50):
-                simulation(max_connections, tiring_rate, n_neurons, simulation_steps, results, res_ind, SEED)
+        for n_neurons in tqdm(range(1, 50)):
+            for max_connections in range(2, 50):
+                simulation(max_connections, tiring_rate, n_neurons, simulation_steps, results, res_ind)
                 res_ind = res_ind+1
     results.to_pickle('res.pckl')
-    
