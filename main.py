@@ -11,8 +11,8 @@ class Neuron:
         self.outputs = [] 
         self.inputs = []
         self.inp = 0
-        self.firing_probability = 0.3
-        self.tiredness = 0.0
+        self.firing_probability = 0.4
+        self.tiredness = 0.2
         self.active_old = np.random.randint(0, 2)
         self.active = 0
         self.first_run = True
@@ -108,7 +108,7 @@ def simulation(max_connections, tiring_rate, number_of_neurons, simulation_steps
         neurons.append(Neuron(max_connections, tiring_rate))
 
     for neuron in neurons:
-        for i in range(0, np.random.randint(1,max_connections)):
+        for i in range(0, max_connections):
             neuron.inputs.append(neurons[np.random.randint(0,number_of_neurons - 1)])
     activity_per_neuron = np.zeros((number_of_neurons, simulation_steps), dtype=np.bool)
     activity = []
@@ -150,9 +150,9 @@ def simulation(max_connections, tiring_rate, number_of_neurons, simulation_steps
 
 
 if __name__ == "__main__":
-    simulation_steps = 150
-    tiring_rates = tqdm([0.1, 0.2, 0.3, 0.4, 0.5])
-    #tiring_rates = [0.4]
+    simulation_steps = 500
+    #tiring_rates = tqdm([0.1, 0.2, 0.3, 0.4, 0.5])
+    tiring_rates = [0]
     #number_of_neurons = 100
     #max_connections = 3
     results = pd.DataFrame(columns=['max_connections', 'tiring_rate', 'neurons', 'simulation_steps', 'active_per_step', 'tired'])
@@ -160,6 +160,6 @@ if __name__ == "__main__":
     for tiring_rate in tiring_rates:
         for n_neurons in tqdm(range(15, 16)):
             for max_connections in tqdm(range(2, 3)):
-                for similar in range(0, 10):
+                for similar in range(0, 50):
                     simulation(max_connections, tiring_rate, n_neurons, simulation_steps, results, res_ind)
                     res_ind = res_ind+1
