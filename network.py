@@ -12,6 +12,7 @@ class Neuron:
         self.tiring = 0
         self.tiring_map = [0.0,0.0,0.0,0.0,0.001, 0.01, 0.271, 0.8, 0.9 ]
         self.tiring_map_upper = len(self.tiring_map) - 1
+
     def tiring_modifier(self, tiring):
         return self.tiring_map[np.clip(tiring, 0, self.tiring_map_upper)]
 
@@ -52,7 +53,19 @@ class Network:
         for neuron in self.neurons:
             for i in range(0,self.connections):
                 neuron.inputs.append(self.neurons[np.random.randint(0, self.n_neurons -1)])
-        
+
+    def step(self):
+        activity_per_neuron = np.zeros((self.n_neurons, 1), dtype=np.bool)
+        for i in range(0, self.n_neurons - 1):
+            self.neurons[i].activation()
+            activity_per_neuron[i, 0] = self.neurons[i].state
+            self.neurons[i].state = self.neurons[i].next_state
+        return activity_per_neuron
+
+    def add_stimuli(self, stimuli):
+        for i in range(0, self.n_neurons -1):
+            self.neurons[i].input_from_other_neurons += stimuli
+
     def simulate(self, steps, **kwargs):
         activity_per_neuron = np.zeros((self.n_neurons, steps), dtype=np.bool)
         hamming_distance = []
