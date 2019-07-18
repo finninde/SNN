@@ -8,7 +8,7 @@ class Neuron:
         self.next_state = 0
         self.input_from_other_neurons = 0
         self.firing_probability = 0
-        self.base_firing_probability = 0.5
+        self.base_firing_probability = 0.2
         self.tiring = 0
         self.tiring_map = [0.0,0.0,0.0,0.0,0.001, 0.01, 0.271, 0.8, 0.9 ]
         self.tiring_map_upper = len(self.tiring_map) - 1

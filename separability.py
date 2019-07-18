@@ -7,7 +7,7 @@ if __name__ == "__main__":
     '''
     Set up network
     '''
-    simulation_steps = 500
+    simulation_steps = 4
     connections = 3
     seed = 81549300
     n_neurons = 5
@@ -19,7 +19,7 @@ if __name__ == "__main__":
     '''
     for i in range(0, 9):
         activity.append(network.step())
-        print(activity[i].size)
+        #print(activity[i].size)
     '''
     Input different stimuli
     '''
@@ -32,7 +32,7 @@ if __name__ == "__main__":
     '''
     Set up new network
     '''
-    simulation_steps = 500
+    simulation_steps = 4
     connections = 3
     seed = 81549300
     n_neurons = 5
@@ -41,15 +41,15 @@ if __name__ == "__main__":
 
     '''
         Run network for initial steps
-        '''
+    '''
     for i in range(0, 9):
         activity2.append(network2.step())
-        print(activity2[i].size)
+        #print(activity2[i].size)
     '''
     input stimuli
     '''
-    #u2 = [1.0, 1.0, 1.0, 1.0]
-    u2 = [0.0, 0.0, 0.0, 0.0]
+    u2 = [1.0, 1.0, 1.0, 1.0]
+    #u2 = [0.0, 0.0, 0.0, 0.0]
     activity_u2 = []
     for stimuli in u2:
         network2.add_stimuli(stimuli)
@@ -62,9 +62,5 @@ if __name__ == "__main__":
 
     for timestep in range(0, len(activity_u1)-1):
         for neuron in range(0, len(activity_u1[timestep])):
-            if activity_u1[timestep][neuron] == activity_u1[timestep][neuron]:
-
-
-    '''for state_u1, state_u2 in zip(activity_u1, activity_u2):
-        equal_states = np.sum(np.equal(state_u1, state_u2))
-        hamming_distance_u1_u2.append((equal_states/n_neurons))'''
+            if activity_u1[timestep][neuron] != activity_u1[timestep][neuron]:
+                print("som")
