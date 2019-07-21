@@ -55,10 +55,10 @@ class Network:
                 neuron.inputs.append(self.neurons[np.random.randint(0, self.n_neurons -1)])
 
     def step(self):
-        activity_per_neuron = np.zeros((self.n_neurons, 1), dtype=np.bool)
+        activity_per_neuron = np.zeros((self.n_neurons), dtype=np.bool)
         for i in range(0, self.n_neurons - 1):
             self.neurons[i].activation()
-            activity_per_neuron[i, 0] = self.neurons[i].state
+            activity_per_neuron[i] = self.neurons[i].state
             self.neurons[i].state = self.neurons[i].next_state
         return activity_per_neuron
 
