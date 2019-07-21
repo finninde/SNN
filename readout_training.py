@@ -3,7 +3,7 @@ from readout_layer import ReadoutLayer
 
 if __name__=="__main__":
 
-    for i in range(0,1):
+    for i in range(0,20):
         simulation_steps = 4
         connections = 3
         seed = 3 + 40*i
@@ -26,13 +26,14 @@ if __name__=="__main__":
 
         '''Add stimuli and train'''
         for steps in range(0, len(parity['train']['inp'])):
-            network.add_stimuli(parity['train']['inp'][i])
+            network.add_stimuli(parity['train']['inp'][steps])
             activity.append(network.step())
 
         '''Train everything simultaneous'''
         print(len(activity[-len(parity['train']['inp']):]))
-        Xs, ys = activity[-len(parity['train']['inp']):], parity['train']['out']
-        readout.train(activity[-len(parity['train']['inp']):],
+        Xs = activity[-len(parity['train']['inp']):]
+
+        readout.train(Xs,
                       parity['train']['out'])
 
         '''Run network for some more time so to reset'''
@@ -42,18 +43,29 @@ if __name__=="__main__":
         positives = 0
         negatives = 0
         for steps in range(0, len(parity['evaluate']['inp'])):
-            network.add_stimuli(parity['evaluate']['inp'][i])
+            network.add_stimuli(parity['evaluate']['inp'][steps])
             activity.append(network.step())
-            if readout.predict(activity[-1]) == parity['evaluate']['out'][i]:
+
+
+        readout_out = readout.predict(activity[-len(parity['evaluate']['inp']):])
+        for output_of_RC in range (0, len(parity['evaluate']['inp'])):
+            if readout_out[output_of_RC] > 0.5:
+                readout_out[output_of_RC] = 1
+            else:
+                readout_out[output_of_RC] = 0
+
+        for output_of_RC in range(0, len(parity['evaluate']['out'])):
+            if readout_out[output_of_RC] == parity['evaluate']['out'][output_of_RC]:
                 positives += 1
             else:
                 negatives += 1
+
 
         print("---------------------")
         print("positives: " + str(positives))
         print("negatives: " + str(negatives))
         print("accuracy: " + str(positives/(positives + negatives)))
         print("Configuration: ")
-        print("Connections" + str(connections))
-        print("n_neurons"+ str(n_neurons))
+        print("Connections: " + str(connections))
+        print("n_neurons: "+ str(n_neurons))
         print("task: PARITY" )
