@@ -5,8 +5,9 @@ from tqdm import tqdm
 
 
 if __name__=="__main__":
+    a_acc = []
     totacc = []
-    for nevroner in tqdm(range(5, 20)):
+    for nevroner in tqdm(range(61, 400)):
         accuracies = []
         for i in range(0,900):
             simulation_steps = 4
@@ -76,10 +77,14 @@ if __name__=="__main__":
             #print("task: PARITY" )
             accuracies.append((positives/(positives + negatives)))
 
-        print("---------------")
-        print("n_nerons: " + str(nevroner))
-        print("total acc: " + str(sum(accuracies) / len(accuracies)))
+        #print("---------------")
+        #print("n_nerons: " + str(nevroner))
+        #print("total acc: " + str(sum(accuracies) / len(accuracies)))
+        a_acc.append(sum(accuracies)/len(accuracies))
         totacc.append(accuracies)
-    with open('totacc.pckl', 'wb')as f:
-        pickle.dump(totacc, f)
-    f.close()
+        with open('results/all_accuracies_for_boxplot_' + str(nevroner) + '.pckl', 'wb')as f:
+            pickle.dump(totacc, f)
+        f.close()
+        with open('results/average_accuracy_n_neuron_' + str(nevroner) + '.pckl', 'wb') as g:
+            pickle.dump(a_acc, g)
+        g.close()
