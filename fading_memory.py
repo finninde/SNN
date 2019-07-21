@@ -62,6 +62,5 @@ if __name__ == "__main__":
     hamming_distance_u1_u2 = []
 
     for timestep in range(0, len(activity_u1)-1):
-        for neuron in range(0, len(activity_u1[timestep])):
+        for neuron in range(0, n_neurons):
             if activity_u1[timestep][neuron] != activity_u1[timestep][neuron]:
-                print("som")
