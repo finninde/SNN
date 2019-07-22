@@ -41,3 +41,39 @@ def random_sequence(length, seed):
         else:
             y.append(0)
     return X, y
+
+
+def generate_training_set(zeros, ones, randoms, length_max, seed):
+    X = []
+    y = []
+    np.random.seed(seed)
+    while zeros > 0 and ones > 0 and randoms > 0:
+        outcome = np.random.randint(0, 3)
+        if outcome == 0 and zeros > 0:
+            zeros -= 1
+            X_add, y_add = sequence_of_zeros(np.random.randint(1, length_max))
+            for elem in X_add:
+                X.append(elem)
+            for elem in y_add:
+                y.append(elem)
+        elif outcome == 1 and ones > 0:
+            X_add, y_add = sequence_of_ones(np.random.randint(1, length_max))
+            for elem in X_add:
+                X.append(elem)
+            for elem in y_add:
+                y.append(elem)
+            ones -= 1
+
+        elif outcome == 2 and randoms > 0:
+            X_add, y_add = random_sequence(np.random.randint(1, length_max))
+            for elem in X_add:
+                X.append(elem)
+            for elem in y_add:
+                y.append(elem)
+            ones -= 1
+            randoms -= 1
+    return X, y
+
+
+def generate_evaluation_set(zeros, ones, randoms, length_max, seed):
+    return generate_training_set(zeros, ones, randoms, length_max, seed)
