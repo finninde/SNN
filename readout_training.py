@@ -2,12 +2,25 @@ from network import Network, Neuron
 from readout_layer import ReadoutLayer
 import pickle
 from tqdm import tqdm
-
+from training_test_generator import *
 
 if __name__=="__main__":
     a_acc = []
     totacc = []
-    for nevroner in tqdm(range(61, 400)):
+    # Use same training and test set for all of them, but use a large one
+
+    parity = {}
+    X_train, y_train = generate_training_set(20, 20, 20, 60, 81549300)
+    parity['train'] = {}
+    parity['train']['inp'] = X_train
+    parity['train']['out'] = y_train
+
+    X_eval, y_eval = generate_evaluation_set(10, 10, 10, 15, 69696969)
+    parity['evaluate'] = {}
+    parity['evaluate']['inp'] = X_eval
+    parity['evaluate']['out'] = y_eval
+
+    for nevroner in tqdm(range(2, 343)):
         accuracies = []
         for i in range(0,900):
             simulation_steps = 4
@@ -17,15 +30,6 @@ if __name__=="__main__":
             activity = []
             network = Network(seed, connections, n_neurons)
             readout = ReadoutLayer(layer_type="linear", dim=20)
-            parity = {}
-            parity['train'] = {}
-            parity['train']['inp'] = [1,0,1,1,0,1,1,1,1,0]
-            parity['train']['out'] = [0,0,0,1,0,0,1,0,1,0]
-
-            parity['evaluate'] = {}
-            parity['evaluate']['inp'] = [1,0,1,1,0,1,1,1,1,0]
-            parity['evaluate']['out'] = [0,0,0,1,0,0,1,0,1,0]
-
             '''Run network for initial steps'''
             for steps in range(0,100):
                 activity.append(network.step())
@@ -82,9 +86,9 @@ if __name__=="__main__":
         #print("total acc: " + str(sum(accuracies) / len(accuracies)))
         a_acc.append(sum(accuracies)/len(accuracies))
         totacc.append(accuracies)
-        with open('results/all_accuracies_for_boxplot_' + str(nevroner) + '.pckl', 'wb')as f:
+        with open('results/n_neurons_real_training_test/all_accuracies_for_boxplot_' + str(nevroner) + '.pckl', 'wb')as f:
             pickle.dump(totacc, f)
         f.close()
-        with open('results/average_accuracy_n_neuron_' + str(nevroner) + '.pckl', 'wb') as g:
+        with open('results/n_neurons_real_training_test/average_accuracy_n_neuron_' + str(nevroner) + '.pckl', 'wb') as g:
             pickle.dump(a_acc, g)
         g.close()

@@ -1,4 +1,4 @@
-import nuympy as np
+import numpy as np
 
 def sequence_of_ones(length):
     # First Reset
@@ -28,11 +28,10 @@ def sequence_of_zeros(length):
     return X,y
 
 
-def random_sequence(length, seed):
+def random_sequence(length):
     # reset
     X = [0]
     y = [0]
-    np.random.seed(seed)
     for i in range(0, length):
         X.append(np.random.randint(0, 2))
 
