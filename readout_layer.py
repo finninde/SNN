@@ -1,11 +1,11 @@
 import numpy as np
-from sklearn.linear_model import LinearRegression, Perceptron
+from sklearn.linear_model import LinearRegression, Perceptron, LogisticRegression
 
 class ReadoutLayer():
     def __init__(self, layer_type, dim):
         if layer_type == "linear":
             self.type = layer_type
-            self.reg = LinearRegression()
+            self.reg = LogisticRegression()
 
         elif layer_type == "perceptron":
             self.reg = Perceptron()
@@ -13,7 +13,7 @@ class ReadoutLayer():
 
         else:
             self.type = "linear"
-            self.reg = LinearRegression()
+            self.reg = LogisticRegression()
         self.dim = dim
 
     def predict(self, X):
@@ -26,4 +26,4 @@ class ReadoutLayer():
         if self.type == "linear":
             self.reg.fit(X,y)
         elif self.type == "perceptron":
-            return self.reg.predict(X)
+            self.reg.fit(X,y)

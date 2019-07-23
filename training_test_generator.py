@@ -2,43 +2,43 @@ import numpy as np
 
 def sequence_of_ones(length):
     # First Reset
-    X = [0]
+    X = [False]
     # Then add input
-    for elem in [1]*length:
+    for elem in [True]*length:
         X.append(elem)
     # First reset is defined as not pair
-    y = [0]
+    y = [False]
     if length % 2 == 0:
-        for elem in [0,1]*(length//2):
+        for elem in [False,True]*(length//2):
             y.append(elem)
     else:
-        for elem in [0,1]*((length-1)//2):
+        for elem in [False,True]*((length-1)//2):
             y.append(elem)
-        y.append(0)
+        y.append(False)
     return X, y
 
 def sequence_of_zeros(length):
     # Reset
-    X = [0]
-    y= [0]
-    for elem in [0]*length:
+    X = [False]
+    y= [False]
+    for elem in [False]*length:
         X.append(elem)
-    for elem in [0]*(length):
+    for elem in [False]*(length):
         y.append(elem)
     return X,y
 
 
 def random_sequence(length):
     # reset
-    X = [0]
-    y = [0]
+    X = [False]
+    y = [False]
     for i in range(0, length):
         X.append(np.random.randint(0, 2))
 
-        if X[-1] == 1 and X[-2] == 1:
-            y.append(1)
+        if X[-1] == True and X[-2] == True:
+            y.append(True)
         else:
-            y.append(0)
+            y.append(False)
     return X, y
 
 

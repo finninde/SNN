@@ -33,6 +33,7 @@ if __name__=="__main__":
             '''Run network for initial steps'''
             for steps in range(0,100):
                 activity.append(network.step())
+                print(activity)
 
             '''Add stimuli and train'''
             for steps in range(0, len(parity['train']['inp'])):
@@ -58,6 +59,7 @@ if __name__=="__main__":
 
 
             readout_out = readout.predict(activity[-len(parity['evaluate']['inp']):])
+            print(readout_out)
             for output_of_RC in range (0, len(parity['evaluate']['inp'])):
                 if readout_out[output_of_RC] > 0.5:
                     readout_out[output_of_RC] = 1
