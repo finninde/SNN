@@ -52,7 +52,7 @@ if __name__=="__main__":
             for steps in range(0, 39):
                 network.add_stimuli(parity['train']['inp'][steps])
                 activity_n_2.append(network.step())
-            fading_memory.append([])
+            
             #Remember, not to measure initial settling phase
             cumulative_distance = 0
             for timestep in range(100, 139):
